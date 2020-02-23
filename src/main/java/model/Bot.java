@@ -44,7 +44,7 @@ public class Bot extends TelegramLongPollingBot {
         }
 
         sendMessage.setText(text);
-        //System.out.println(message.getText());
+        System.out.println(message.getText());
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -85,7 +85,7 @@ public class Bot extends TelegramLongPollingBot {
                         setInline();
                         break;
                     default:
-                        sendMsg(message, "Mistake input", true, false);
+                        sendMsg(message, "Не ломай мой железный мозг=)\nДавай общаться кнопками", true, false);
                         break;
                 }
             }
