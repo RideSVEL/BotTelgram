@@ -23,8 +23,9 @@ import static sun.util.logging.LoggingSupport.log;
 //TODO safe migrate on LATEST version TELEGRAM API
 public class Bot extends TelegramLongPollingBot {
 
-    boolean starting = false;
-    String name = "";
+    boolean nameUser = false;
+    //TODO change the methods for set name, that it works with unique users
+    String name = "default";
 
     /**
      * @param message get message parameters
@@ -52,6 +53,10 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    private void settingName() {
+
+    }
+
 
     /**
      * @param update get updates messages from telegram server
@@ -62,23 +67,32 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         if (message != null && message.hasText()) {
 
-            if (starting) {
+            if (nameUser) {
                 name = message.getText();
-                sendMsg(message, "Привет, " + name + "!\nКак у тебя дела?", false,false);
-                starting = false;
+                sendMsg(message, "Привет, " + name + "!\nЭто ваше новое отображаемое имя.", false, false);
+                nameUser = false;
             } else {
                 switch (message.getText()) {
                     case "/start":
-                        sendMsg(message, "Выбери пункт из меню ниже:", false, true);
-                        setButtons(sendMessage);
-
+                        //sendMsg(message, "Выбери пункт из меню ниже:", false, true);
+                        // setButtons(sendMessage);
+                        sendMsg(message, "Привет! Это телеграм бот для абитуриентов ХПИ!\n" +
+                                "Давай знакомиться=)\n" +
+                                "Используй команду /setname.\n" +
+                                "В дальнейшем ты сможешь изменить свое имя используя данную команду.", false, false);
+                        break;
+                    case "/setname":
+//                        String temp = message.getText().replaceAll("[.,:!?\"]", message.getText());
+//                        String[] buffer = temp.split(" ");
+//                        name = new String(new StringBuilder().append(buffer[1]).append(" ").append(buffer[2]));
+                        sendMsg(message, "Введите ваше новое отображаемое имя и фамилию:", false, false);
+                        nameUser = true;
                         break;
                     case "/help":
                         sendMsg(message, "How are you today?", false, false);
                         break;
-                    case "Давай знакомиться":
-                        sendMsg(message, "Как вас зовут?", false, false);
-                        starting = true;
+                    case "Hi":
+                        sendMsg(message, "Привет, " + name + "!\nТы лучший!)", false, false);
                         break;
                     case "/settings":
                         sendMsg(message, "It is settings mod", false, false);
