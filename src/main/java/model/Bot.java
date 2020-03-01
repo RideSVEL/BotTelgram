@@ -1,5 +1,7 @@
 package model;
 
+import database.DBExceptions;
+import database.DBManager;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -23,6 +25,7 @@ import static sun.util.logging.LoggingSupport.log;
 //TODO safe migrate on LATEST version TELEGRAM API
 public class Bot extends TelegramLongPollingBot {
 
+    DBManager dbManager = DBManager.getInstance();
     boolean nameUser = false;
     //TODO change the methods for set name, that it works with unique users
     String name = "default";
@@ -53,29 +56,31 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    private void settingName() {
-
-    }
-
-
     /**
      * @param update get updates messages from telegram server
      */
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
-        SendMessage sendMessage = new SendMessage();
         if (message != null && message.hasText()) {
-
             if (nameUser) {
-                name = message.getText();
-                sendMsg(message, "Привет, " + name + "!\nЭто ваше новое отображаемое имя.", false, false);
+                try {
+                    dbManager.updateName(message.getChatId(), message.getText());
+                    sendMsg(message, "Привет, " + dbManager.getName(message.getChatId()) + "!\nЭто ваше новое отображаемое имя.", false, false);
+                } catch (DBExceptions dbExceptions) {
+                    dbExceptions.printStackTrace();
+                }
                 nameUser = false;
             } else {
                 switch (message.getText()) {
                     case "/start":
                         //sendMsg(message, "Выбери пункт из меню ниже:", false, true);
                         // setButtons(sendMessage);
+                        try {
+                            dbManager.insertChat(message.getChatId());
+                        } catch (DBExceptions dbExceptions) {
+                            dbExceptions.printStackTrace();
+                        }
                         sendMsg(message, "Привет! Это телеграм бот для абитуриентов ХПИ!\n" +
                                 "Давай знакомиться=)\n" +
                                 "Используй команду /setname.\n" +
@@ -92,7 +97,11 @@ public class Bot extends TelegramLongPollingBot {
                         sendMsg(message, "How are you today?", false, false);
                         break;
                     case "Hi":
-                        sendMsg(message, "Привет, " + name + "!\nТы лучший!)", false, false);
+                        try {
+                            sendMsg(message, "Привет, " + dbManager.getName(message.getChatId()) + "!\nТы лучший!)", false, false);
+                        } catch (DBExceptions dbExceptions) {
+                            dbExceptions.printStackTrace();
+                        }
                         break;
                     case "/settings":
                         sendMsg(message, "It is settings mod", false, false);
