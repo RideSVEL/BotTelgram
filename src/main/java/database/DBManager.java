@@ -6,7 +6,7 @@ public class DBManager {
 
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/telegram_bot"
             + "?user=root&password=147258&serverTimezone=UTC";
-    private static final String SQL_INSERT_CHAT = "INSERT INTO telegram_bot.users VALUES (DEFAULT, ?, DEFAULT)";
+    private static final String SQL_INSERT_CHAT = "INSERT INTO telegram_bot.users VALUES (DEFAULT, ?, DEFAULT, ?, ?, ?)";
     private static final String SQL_FIND_USER_BY_CHAT_ID = "SELECT * FROM telegram_bot.users WHERE chat_id=?";
     private static final String SQL_UPDATE_NAME = "UPDATE telegram_bot.users SET name_user = ? WHERE chat_id = ?";
     private static final String SQL_GET_NAME = "SELECT name_user FROM telegram_bot.users WHERE chat_id = ?";
@@ -34,13 +34,16 @@ public class DBManager {
         }
     }
 
-    public void insertChat(long chatId) throws DBExceptions {
+    public void insertChat(long chatId, String username, String firstname, String lastname) throws DBExceptions {
         try (Connection con = getConnection()) {
             if (checkUser(chatId) != 0) {
                 return;
             }
-            PreparedStatement ps = con.prepareStatement(SQL_INSERT_CHAT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(SQL_INSERT_CHAT);
             ps.setString(1, String.valueOf(chatId));
+            ps.setString(2, username);
+            ps.setString(3, firstname);
+            ps.setString(4, lastname);
             ps.executeUpdate();
         } catch (SQLException ex) {
             throw new DBExceptions(ex);
