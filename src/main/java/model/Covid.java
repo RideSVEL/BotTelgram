@@ -2,59 +2,65 @@ package model;
 
 import database.DBExceptions;
 import database.DBManager;
+import org.apache.log4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+
+import static sun.util.logging.LoggingSupport.log;
+
+//TODO safe migrate on LATEST version TELEGRAM API
+public class Covid extends TelegramLongPollingBot {
 
 
-
-public class BotKHPI extends TelegramLongPollingBot {
 
     DBManager dbManager = DBManager.getInstance();
     boolean nameUser = false;
     //TODO change the methods for set name, that it works with unique users
     String name = "default";
 
-//    /**
-//     * @param message get message parameters
-//     * @param text    text your message
-//     * @param reply   reply on message
-//     * @param menu    show menu
-//     */
-//    private synchronized void sendMsg(Message message, String text, boolean reply, boolean menu) {
-//        SendMessage sendMessage = new SendMessage();
-//        sendMessage.enableMarkdown(true);
-//        sendMessage.setChatId(message.getChatId());
-//        if (reply) {
-//            sendMessage.setReplyToMessageId(message.getMessageId());
-//        }
-//        if (menu) {
-//            setButtons(sendMessage);
-//        }
-//
-//        sendMessage.setText(text);
-//        System.out.println(message.getText());
-//        try {
-//            execute(sendMessage);
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    /**
+     * @param message get message parameters
+     * @param text    text your message
+     * @param reply   reply on message
+     */
+    private synchronized void sendMsg(Message message, String text, boolean reply) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.enableMarkdown(true);
+        sendMessage.setChatId(message.getChatId());
+        if (reply) {
+            sendMessage.setReplyToMessageId(message.getMessageId());
+        }
 
-//    /**
-//     * @param update get updates messages from telegram server
-//     */
-//    @Override
-//    public void onUpdateReceived(Update update) {
-//        Message message = update.getMessage();
-//        SendMessage sendMessage = new SendMessage();
-//        if (message != null && message.hasText()) {
+        sendMessage.setText(text);
+        System.out.println(message.getText());
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param update get updates messages from telegram server
+     */
+    @Override
+    public void onUpdateReceived(Update update) {
+        Message message = update.getMessage();
+        if (message != null && message.hasText()) {
+            System.out.println(message.getText());
+            System.out.println(message.getChatId());
+            System.out.println(message.getDate());
+            System.out.println(message.getPhoto());
 //            if (nameUser) {
 //                try {
 //                    dbManager.updateName(message.getChatId(), message.getText());
@@ -64,21 +70,15 @@ public class BotKHPI extends TelegramLongPollingBot {
 //                }
 //                nameUser = false;
 //            } else {
-//                System.out.println(message.getMessageId());
-//                System.out.println(message.getChatId());
-//                System.out.println(message.getChat());
-//                System.out.println(message.getContact());
-//
 //                switch (message.getText()) {
 //                    case "/start":
 //                        //sendMsg(message, "Выбери пункт из меню ниже:", false, true);
-//
-//                        try {
-//                            setButtons(sendMessage);
-//                            dbManager.insertChat(message.getChatId(), message.getChat().getUserName(), message.getChat().getFirstName(), message.getChat().getLastName());
-//                        } catch (DBExceptions dbExceptions) {
-//                            dbExceptions.printStackTrace();
-//                        }
+//                        // setButtons(sendMessage);
+////                        try {
+////                            dbManager.insertChat(message.getChatId());
+////                        } catch (DBExceptions dbExceptions) {
+////                            dbExceptions.printStackTrace();
+////                        }
 //                        sendMsg(message, "Привет! Это телеграм бот для абитуриентов ХПИ!\n" +
 //                                "Давай знакомиться=)\n" +
 //                                "Используй команду /setname.\n" +
@@ -96,55 +96,23 @@ public class BotKHPI extends TelegramLongPollingBot {
 //                        break;
 //                    case "Hi":
 //                        try {
-//                            sendMsg(message, "Привет, " + dbManager.getName(message.getChatId()) + "!\nТы лучший(ая)❤", false, false);
+//                            sendMsg(message, "Привет, " + dbManager.getName(message.getChatId()) + "!\nТы лучший!)", false, false);
 //                        } catch (DBExceptions dbExceptions) {
 //                            dbExceptions.printStackTrace();
 //                        }
 //                        break;
 //                    case "/settings":
 //                        sendMsg(message, "It is settings mod", false, false);
-//                        setInline();
+////                        setInline();
 //                        break;
 //                    default:
 //                        sendMsg(message, "Не ломай мой железный мозг=)\nДавай общаться кнопками", true, false);
 //                        break;
 //                }
 //            }
-//        }
-//    }
-
-    @Override
-    public void onUpdatesReceived(List<Update> updates) {
-
+        }
     }
 
-// TODO make this method workable and next
-//    @Override
-//    public void onUpdateReceived(Update update) {
-//        if (update.hasMessage()) {
-//            ThreadClass thread = new ThreadClass(update.getMessage());
-//        } else if (update.hasCallbackQuery()) {
-//            AnswerCallbackThread answerThread = new AnswerCallbackThread(update.getCallbackQuery());
-//        }
-//    }
-
-// TODO make this method workable and prev
-//    public synchronized void answerCallbackQuery(String callbackId, String message) {
-//        AnswerCallbackQuery answer = new AnswerCallbackQuery();
-//        answer.setCallbackQueryId(callbackId);
-//        answer.setText(message);
-//        answer.setShowAlert(true);
-//        try {
-//            answerCallbackQuery(answer);
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    @Override
-    public void onUpdateReceived(Update update) {
-
-    }
 
     /**
      * @return bot`s name, make by registration
@@ -159,7 +127,7 @@ public class BotKHPI extends TelegramLongPollingBot {
     public String getBotToken() {
         return "909718704:AAF1O6VxafVioSkxD6bM1UU_gza0uH6MQlI";
     }
-
+//
 //    /**
 //     * @param sendMessage return message for send
 //     *                    set keyboards
@@ -183,7 +151,6 @@ public class BotKHPI extends TelegramLongPollingBot {
 //        keyboardRows.add(secondRow);
 //        replyKeyboardMarkup.setKeyboard(keyboardRows);
 //
-//        System.out.println("Create keyboard");
 //    }
 //
 //
@@ -201,9 +168,9 @@ public class BotKHPI extends TelegramLongPollingBot {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-            telegramBotsApi.registerBot(new BotKHPI());
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+            telegramBotsApi.registerBot(new Covid());
+        } catch (TelegramApiRequestException e) {
+            log(Level.SEVERE, "Exception: ", e.toString());
         }
     }
 }
