@@ -33,27 +33,36 @@ public class FormStats {
     }
 
     private static Country parseCountry(String result) {
-        Country country = new Country();
         JSONArray jsonArray = new JSONArray(result);
-        JSONObject temp = jsonArray.getJSONObject(0);
-        country.setName(temp.getString("Country"));
-        country.setTotalConfirmed(temp.getInt("Confirmed"));
-        country.setTotalDeath(temp.getInt("Deaths"));
-        country.setTotalRecovered(temp.getInt("Recovered"));
-        country.setActive(temp.getInt("Active"));
-        country.setDate(temp.getString("Date"));
+        if (jsonArray.length() != 2) {
+            return null;
+        }
+        Country country = new Country();
+        JSONObject yesterday = jsonArray.getJSONObject(0);
+        JSONObject now = jsonArray.getJSONObject(1);
+        country.setName(now.getString("Country"));
+        country.setTotalConfirmed(now.getInt("Confirmed"));
+        country.setTotalDeath(now.getInt("Deaths"));
+        country.setTotalRecovered(now.getInt("Recovered"));
+        country.setActive(now.getInt("Active"));
+        country.setDate(now.getString("Date"));
+        country.setNewConfirmed(country.getTotalConfirmed() - yesterday.getInt("Confirmed"));
+        country.setNewRecovered(country.getTotalRecovered() - yesterday.getInt("Recovered"));
+        country.setNewDeath(country.getTotalDeath() - yesterday.getInt("Deaths"));
         return country;
     }
 
     public static Country getCountry(String countryName) {
-        HttpResponse<String> response = getResponse(countryName, -1);
+        HttpResponse<String> response = getResponse(countryName, -2);
         if (response != null) {
             if (response.getBody().equals("[]\n")) {
-                response = getResponse(countryName, -2);
-                if (response.getBody().equals("[]\n")) {
                     return null;
                 }
-                return parseCountry(response.getBody());
+            if (new JSONArray(response.getBody()).length() != 2) {
+                HttpResponse<String> response2 = getResponse(countryName, -3);
+                if (response2 != null) {
+                    return parseCountry(response2.getBody());
+                }
             }
             return parseCountry(response.getBody());
         }
