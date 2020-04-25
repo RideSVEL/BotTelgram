@@ -12,9 +12,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import telegram.bot.entity.Country;
 
-
-import java.util.logging.Level;
-
 //import static sun.util.logging.LoggingSupport.log;
 
 public class Covid extends TelegramLongPollingBot {
@@ -23,15 +20,15 @@ public class Covid extends TelegramLongPollingBot {
     /**
      * @param message get message parameters
      * @param text    text your message
-     * @param reply   reply on message
+//     * @param reply   reply on message
      */
-    private synchronized void sendMsg(Message message, String text, boolean reply) {
+    private synchronized void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId());
-        if (reply) {
-            sendMessage.setReplyToMessageId(message.getMessageId());
-        }
+//        if (reply) {
+//            sendMessage.setReplyToMessageId(message.getMessageId());
+//        }
 
         sendMessage.setText(text);
         System.out.println(message.getText());
@@ -49,11 +46,11 @@ public class Covid extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
-            sendMsg(message, FormStats.getBody(message.getText().toLowerCase(), new Country()), false);
+//            Country country = FormStats.getCountry(message.getText().toLowerCase());
+            sendMsg(message, FormStats.getCountry(message.getText().toLowerCase()).toString());
             System.out.println(message.getText());
             System.out.println(message.getChatId());
             System.out.println(message.getDate());
-            System.out.println(message.getPhoto());
         }
     }
 

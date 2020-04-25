@@ -1,7 +1,5 @@
 package telegram.bot.entity;
 
-import java.util.Date;
-
 public class Country {
 
     private String name;
@@ -11,7 +9,16 @@ public class Country {
     private int totalDeath;
     private int newRecovered;
     private int totalRecovered;
-    private Date date;
+    private String date;
+    private int active;
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
 
     public String getName() {
         return name;
@@ -49,6 +56,21 @@ public class Country {
         return totalDeath;
     }
 
+    @Override
+    public String toString() {
+        return "Country{\n" +
+                "name='" + name + '\'' +
+                ", \nnewConfirmed=" + newConfirmed +
+                ", \ntotalConfirmed=" + totalConfirmed +
+                ", \nnewDeath=" + newDeath +
+                ", \ntotalDeath=" + totalDeath +
+                ", \nnewRecovered=" + newRecovered +
+                ", \ntotalRecovered=" + totalRecovered +
+                ", \ndate='" + date + '\'' +
+                ", \nactive=" + active +
+                '}';
+    }
+
     public void setTotalDeath(int totalDeath) {
         this.totalDeath = totalDeath;
     }
@@ -69,11 +91,11 @@ public class Country {
         this.totalRecovered = totalRecovered;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

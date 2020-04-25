@@ -1,8 +1,3 @@
-package telegram.bot.model;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -11,7 +6,30 @@ import org.json.JSONObject;
 import telegram.bot.config.BotConfig;
 import telegram.bot.entity.Country;
 
-public class FormStats {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
+
+public class Test {
+    public static void main(String[] args) {
+//        Date date = new Date();
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        System.out.println(simpleDateFormat.format(date));
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DATE, -1);
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        System.out.println(simpleDateFormat.format(cal.getTime()));
+        String result = "{\"Country\":\"Ukraine\",\"CountryCode\":\"UA\",\"Province\":\"\",\"City\":\"\",\"CityCode\":\"\",\"Lat\":\"48.38\",\"Lon\":\"31.17\",\"Confirmed\":8125,\"Deaths\":201,\"Recovered\":782,\"Active\":7142,\"Date\":\"2020-04-25T00:00:00Z\"}";
+        HttpResponse<String> response = getResponse("ukraine", -1);
+        System.out.println(response.getBody());
+        String temp =  response.getBody();
+//        temp = temp.replaceAll("\\[", "");
+//        temp = temp.replaceAll("\\]", "");
+//        System.out.println(temp);
+        Country country = parseCountry(temp);
+        System.out.println(country);
+    }
 
     private static String generateDate(int amount) {
         Calendar cal = Calendar.getInstance();
@@ -32,10 +50,13 @@ public class FormStats {
         return response;
     }
 
-    private static Country parseCountry(String result) {
+    public static Country parseCountry(String result) {
         Country country = new Country();
+//        JSONObject json = new JSONObject(result);
         JSONArray jsonArray = new JSONArray(result);
         JSONObject temp = jsonArray.getJSONObject(0);
+
+
         country.setName(temp.getString("Country"));
         country.setTotalConfirmed(temp.getInt("Confirmed"));
         country.setTotalDeath(temp.getInt("Deaths"));
@@ -44,21 +65,4 @@ public class FormStats {
         country.setDate(temp.getString("Date"));
         return country;
     }
-
-    public static Country getCountry(String countryName) {
-        HttpResponse<String> response = getResponse(countryName, -1);
-        if (response != null) {
-            if (response.getBody().equals("[]\n")) {
-                response = getResponse(countryName, -2);
-                if (response.getBody().equals("[]\n")) {
-                    return null;
-                }
-                return parseCountry(response.getBody());
-            }
-            return parseCountry(response.getBody());
-        }
-        return null;
-    }
-
 }
-
