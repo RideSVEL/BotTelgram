@@ -1,4 +1,4 @@
-package database;
+package telegram.bot.database;
 
 import java.sql.*;
 

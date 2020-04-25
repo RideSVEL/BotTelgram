@@ -1,4 +1,4 @@
-package database;
+package telegram.bot.database;
 
 public class DBExceptions extends Exception {
 
@@ -7,6 +7,6 @@ public class DBExceptions extends Exception {
     }
 
     public DBExceptions(Throwable cause){
-        this("Sorry database not available.", cause);
+        this("Sorry telegram.bot.database not available.", cause);
     }
 }

@@ -1,4 +1,4 @@
-package entity;
+package telegram.bot.entity;
 
 import java.util.Date;
 
