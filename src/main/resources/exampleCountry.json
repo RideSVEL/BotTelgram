@@ -1,1 +1,14 @@
-{"Country":"Ukraine","CountryCode":"UA","Province":"","City":"","CityCode":"","Lat":"48.38","Lon":"31.17","Confirmed":8125,"Deaths":201,"Recovered":782,"Active":7142,"Date":"2020-04-25T00:00:00Z"}
+{
+  "Country": "Ukraine",
+  "CountryCode": "UA",
+  "Province": "",
+  "City": "",
+  "CityCode": "",
+  "Lat": "48.38",
+  "Lon": "31.17",
+  "Confirmed": 8125,
+  "Deaths": 201,
+  "Recovered": 782,
+  "Active": 7142,
+  "Date": "2020-04-25T00:00:00Z"
+}
