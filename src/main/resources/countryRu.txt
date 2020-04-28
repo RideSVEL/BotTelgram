@@ -1,0 +1,498 @@
+Джибути
+Палестинская территория
+Сен-Мартен
+Вьетнам
+Аландские острова
+Конго
+Эквадор
+Антигуа и Барбуда
+Ливия
+Россия
+Сент-Винсент и Гренадины
+Сейшельские острова
+Остров Рождества
+Шерстяная фуфайка
+Соломоновы острова
+Соединенные Штаты Америки
+Америка
+Австрия
+Коморские острова
+Намибия
+Сингапур
+Эритрея
+Мексика
+Бельгия
+Британская территория Индийского океана
+Колумбия
+Французская Полинезия
+Таиланд
+Сирия
+Тайвань
+объединенное Королевство
+Бенин
+Французская Гвиана
+Северная Корея
+Кувейт
+Алжир
+Аруба
+Каймановы острова
+Лихтенштейн
+Танзания
+Канада
+Гибралтар
+Гондурас
+Южный Судан
+Идти
+Нидерланды
+Новая Зеландия
+Сент-Люсия
+Афганистан
+Белиз
+Бутан
+Экваториальная Гвинея
+Барбадос
+Гонконг
+Зимбабве
+Словения
+Острова Уоллис и Футуна
+Чехия
+Эстония
+Гвинея-Бисау
+Остров Норфолк
+Норвегия
+Боливия
+Люксембург
+Малави
+Маврикий
+Сербия
+Кокосовые острова
+Гваделупа
+Гайана
+Мозамбик
+Сен-Пьер и Микелон
+Бермудские острова
+Грузия
+Латвия
+Доминика
+Нидерландские Антильские острова
+Свазиленд
+Самоа
+Франция
+Гана
+Британские Виргинские острова
+Малайзия
+Северные Марианские острова
+Сан-Томе и Принсипи
+Маршалловы острова
+Нигер
+Румыния
+Кипр
+Индия
+Италия
+Сенегал
+Острова Шпицберген и Ян-Майен
+Узбекистан
+Мадагаскар
+Туркменистан
+Объединенные Арабские Эмираты
+Бахрейн
+Швейцария
+Хорватия
+Южные Французские Территории
+Руанда
+Швеция
+Острова Кука
+Джерси
+Греция
+Ямайка
+Либерия
+Египет
+Майотта
+Сан-Марино
+Албания
+Камерун
+Марокко
+Остров Святой Елены
+Чад
+Уругвай
+Израиль
+Монако
+Катар
+Саудовская Аравия
+Республика Косово
+Вануату
+Фарерские острова
+Кирибати
+Судан
+Мальта
+Таджикистан
+Монголия
+Пакистан
+Суринам
+Йемен
+Багамские острова
+Камбоджа
+Конго
+Монсеррат
+Западная Сахара
+Мьянма
+Непал
+Украина
+Чили
+Гренада
+Ватикан
+Ирак
+Германия
+Южная Георгия и Южные Сандвичевы острова
+Новая Каледония
+Словакия
+Польша
+Сен-Бартельми
+Виргинские острова
+Фиджи
+Финляндия
+Филиппины
+Бруней-Даруссалам
+Япония
+Казахстан
+Науру
+Венесуэла
+Испания
+Болгария
+Эфиопия
+Южная Корея
+Южная Африка
+Оман
+Шри-Ланка
+Венгрия
+Индонезия
+Черногория
+Мальдивы
+Тонга
+Кабо-Верде
+Китай
+Гватемала
+Макао
+Восточный Тимор
+Пуэрто-Рико
+Малые отдаленные острова США
+Остров Буве
+Доминиканская Республика
+Гуам
+Остров Мэн
+Македония
+Мали
+Панама
+Аргентина
+Гамбия
+Киргизия
+Токелау
+Армения
+Беларусь
+Коста Рика
+Уганда
+Бразилия
+Папуа
+Перу
+Гренландия
+Гаити
+Острова Теркс и Кайкос
+Куба
+Микронезия
+Самоа
+Мартиника
+Никарагуа
+Парагвай
+Тунис
+Австралия
+Молдова
+Тринидад и Тобаго
+Португалия
+Сент-Китс и Невис
+Азербайджан
+Сальвадор
+Лесото
+Антарктида
+Дания
+Питкэрн
+Сьерра-Леоне
+Берег Слоновой Кости
+Гвинея
+Исландия
+Ангилья
+Бангладеш
+Босния и Герцеговина
+Ботсвана
+Центрально-Африканская Республика
+Африка
+Иран
+Ливан
+Сомали
+Замбия
+Ангола
+Острова Херд и Макдональд
+Кения
+Мавритания
+Нигерия
+Тувалу
+Андорра
+Бурунди
+Фолклендские острова
+Габон
+Иордания
+Лаосская Республика
+Турция
+Реюньон
+Буркина-Фасо
+Ирландия
+Литва
+Гернси
+Djibouti
+Palestinian Territory
+Saint martin
+Vietnam
+Åland Islands
+Congo
+Ecuador
+Antigua and Barbuda
+Libya
+Russia
+Saint Vincent and the Grenadines
+Seychelles
+Christmas Island
+Woolen Sweatshirt
+Solomon islands
+United States of America
+America
+Austria
+Comoros
+Namibia
+Singapore
+Eritrea
+Mexico
+Belgium
+British Indian Ocean Territory
+Colombia
+French polynesia
+Thailand
+Syria
+Taiwan
+United Kingdom
+Benin
+French guiana
+North Korea
+Kuwait
+Algeria
+Aruba
+Cayman islands
+Liechtenstein
+Tanzania
+Canada
+Gibraltar
+Honduras
+South Sudan
+Go
+Netherlands
+New Zealand
+Saint lucia
+Afghanistan
+Belize
+Butane
+Equatorial Guinea
+Barbados
+Hong Kong
+Zimbabwe
+Slovenia
+Wallis and Futuna Islands
+Czech Republic
+Estonia
+Guinea bissau
+Norfolk Island
+Norway
+Bolivia
+Luxembourg
+Malawi
+Mauritius
+Serbia
+Coconut islands
+Guadeloupe
+Guyana
+Mozambique
+Saint Pierre and Miquelon
+Bermuda
+Georgia
+Latvia
+Dominica
+Netherlands Antilles
+Swaziland
+Samoa
+France
+Ghana
+British Virgin Islands
+Malaysia
+Northern Mariana Islands
+Sao Tome and Principe
+Marshall Islands
+Niger
+Romania
+Cyprus
+India
+Italy
+Senegal
+Svalbard and Jan Mayen Islands
+Uzbekistan
+Madagascar
+Turkmenistan
+United Arab Emirates
+Bahrain
+Switzerland
+Croatia
+Southern French Territories
+Rwanda
+Sweden
+Cook Islands
+Jersey
+Greece
+Jamaica
+Liberia
+Egypt
+Mayotte
+San marino
+Albania
+Cameroon
+Morocco
+Saint Helena
+Chad
+Uruguay
+Israel
+Monaco
+Qatar
+Saudi Arabia
+Republic of Kosovo
+Vanuatu
+Faroe islands
+Kiribati
+Sudan
+Malta
+Tajikistan
+Mongolia
+Pakistan
+Suriname
+Yemen
+Bahamas
+Cambodia
+Congo
+Montserrat
+West Sahara
+Myanmar
+Nepal
+Ukraine
+Chile
+Grenada
+Vatican
+Iraq
+Germany
+South Georgia and the South Sandwich Islands
+New caledonia
+Slovakia
+Poland
+Saint barthelemy
+Virgin Islands
+Fiji
+Finland
+Philippines
+Brunei Darussalam
+Japan
+Kazakhstan
+Nauru
+Venezuela
+Spain
+Bulgaria
+Ethiopia
+South Korea
+South Africa
+Oman
+Sri Lanka
+Hungary
+Indonesia
+Montenegro
+Maldives
+Tonga
+Cape Verde
+China
+Guatemala
+Macau
+East Timor
+Puerto rico
+Small remote islands of the USA
+Bouvet Island
+Dominican Republic
+Guam
+Isle Of Man
+Macedonia
+Mali
+Panama
+Argentina
+Gambia
+Kyrgyzstan
+Tokelau
+Armenia
+Belarus
+Costa Rica
+Uganda
+Brazil
+Papua
+Peru
+Greenland
+Haiti
+Turks and Caicos Islands
+Cuba
+Micronesia
+Samoa
+Martinique
+Nicaragua
+Paraguay
+Tunisia
+Australia
+Moldova
+Trinidad and Tobago
+Portugal
+Saint Kitts and Nevis
+Azerbaijan
+Salvador
+Lesotho
+Antarctica
+Denmark
+Pitcairn
+Sierra leone
+Ivory Coast
+Guinea
+Iceland
+Anguilla
+Bangladesh
+Bosnia and Herzegovina
+Botswana
+Central African Republic
+Africa
+Iran
+Lebanon
+Somalia
+Zambia
+Angola
+Heard and MacDonald Islands
+Kenya
+Mauritania
+Nigeria
+Tuvalu
+Andorra
+Burundi
+Falkland Islands
+Gabon
+Jordan
+Lao Republic
+Turkey
+Reunion
+Burkina Faso
+Ireland
+Lithuania
+Guernsey

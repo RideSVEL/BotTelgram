@@ -13,6 +13,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import telegram.bot.entity.Country;
 import telegram.bot.entity.World;
 
+import java.util.List;
+
 public class Covid extends TelegramLongPollingBot {
 
 
@@ -46,9 +48,16 @@ public class Covid extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
+            if (message.getText().length() == 1) {
+                List<String> countries = FormStats.getCountries(message.getText().toUpperCase().charAt(0));
+                assert countries != null;
+                sendMsg(message, countries.toString());
+                return;
+            }
             System.out.println(message.getText());
             System.out.println(message.getChatId());
             System.out.println(message.getDate());
+            sendMsg(message, "Секунду, сейчас произведу расчеты..");
             Country country = FormStats.getCountry(message.getText()
                     .replaceAll("[.,@$()012456789]", ""));
             if (country != null) {
