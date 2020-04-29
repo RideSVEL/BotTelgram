@@ -35,7 +35,7 @@
         <maven.compiler.release>8</maven.compiler.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <telegrambots.version>4.7</telegrambots.version>
+        <telegrambots.version>4.8.1</telegrambots.version>
         <junit.version>5.5.2</junit.version>
         <mockito.version>3.1.0</mockito.version>
         <mockitojupiter.version>3.1.0</mockitojupiter.version>
@@ -51,14 +51,14 @@
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
-            <version>4.7</version>
+            <version>4.8.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.telegram/telegrambotsextensions -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambotsextensions</artifactId>
-            <version>4.7</version>
+            <version>4.8.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->

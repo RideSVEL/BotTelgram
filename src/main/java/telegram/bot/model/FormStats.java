@@ -38,9 +38,11 @@ public class FormStats {
             switch (cases) {
                 case world:
                     response = Unirest.get(BotConfig.API_WORLD).asString();
+                    break;
                 case general:
                     response = Unirest.get(BotConfig.API_FIRST_COVID + countryName + BotConfig.API_SECOND_COVID + generateDate(amount))
                             .asString();
+                    break;
             }
         } catch (UnirestException e) {
             e.printStackTrace();
@@ -148,13 +150,35 @@ public class FormStats {
         return country;
     }
 
-    private static Country parseUSA(String body) {
-        return new Country();
+    private static Country parseByProvinces(String body) {
+        JSONArray jsonArray = new JSONArray(body);
+        int lstConfirmed = 0;
+        int lstRecovered = 0;
+        int lstDeath = 0;
+        for (int i = 0; i < jsonArray.length() / 2; i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            lstConfirmed = lstConfirmed + jsonObject.getInt("Confirmed");
+            lstDeath = lstDeath + jsonObject.getInt("Deaths");
+            lstRecovered = lstRecovered + jsonObject.getInt("Recovered");
+        }
+        Country country = new Country();
+        for (int i = jsonArray.length() / 2; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            country.setTotalConfirmed(country.getTotalConfirmed() + jsonObject.getInt("Confirmed"));
+            country.setTotalDeath(country.getTotalDeath() + jsonObject.getInt("Deaths"));
+            country.setTotalRecovered(country.getTotalRecovered() + jsonObject.getInt("Recovered"));
+            country.setActive(country.getActive() + jsonObject.getInt("Active"));
+        }
+        country.setName(jsonArray.getJSONObject(0).getString("Country"));
+        country.setDate(jsonArray.getJSONObject(0).getString("Date"));
+        country.setNewDeath(country.getTotalDeath() - lstDeath);
+        country.setNewConfirmed(country.getTotalConfirmed() - lstConfirmed);
+        country.setNewRecovered(country.getTotalRecovered() - lstRecovered);
+        return country;
     }
 
-    private static Country parseChina(String body) {
-        return new Country();
-    }
+
+
 
     public static Country getCountry(String countryName) {
         String slug = null;
@@ -163,29 +187,30 @@ public class FormStats {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assert slug != null;
-        HttpResponse<String> response = getResponse(slug.toLowerCase(), -2, Cases.general);
-        if (response != null) {
-            if (response.getBody().equals("[]\n")) {
-                return null;
-            }
-            switch (slug) {
-                case "france":
-                    return parseFrance(response.getBody());
-                case "china":
-                    return parseChina(response.getBody());
-                case "united-states":
-                    return parseUSA(response.getBody());
-            }
-            if (new JSONArray(response.getBody()).length() != 2) {
-                HttpResponse<String> response2 = getResponse(slug.toLowerCase(), -3, Cases.general);
-                if (response2 != null) {
-                    return parseCountry(response2.getBody());
+        if (slug != null) {
+            HttpResponse<String> response = getResponse(slug.toLowerCase(), -2, Cases.general);
+            if (response != null) {
+                if (response.getBody().equals("[]\n")) {
+                    return null;
                 }
+                switch (slug) {
+                    case "france":
+                        return parseFrance(response.getBody());
+                    case "china":
+                    case "united-states":
+                        return parseByProvinces(response.getBody());
+                }
+                if (new JSONArray(response.getBody()).length() != 2) {
+                    HttpResponse<String> response2 = getResponse(slug.toLowerCase(), -3, Cases.general);
+                    if (response2 != null) {
+                        return parseCountry(response2.getBody());
+                    }
+                }
+                return parseCountry(response.getBody());
             }
-            return parseCountry(response.getBody());
         }
         return null;
     }
+
 }
 

@@ -72,7 +72,7 @@ public class Covid extends TelegramLongPollingBot {
             } else {
                 World world = FormStats.getWorldTotal();
                 if (world != null) {
-                    sendMsg(message, "Извини, мой железный мозг не знает такой страны\uD83D\uDE48" +
+                    sendMsg(message, "К сожалению, мой железный мозг не знает такой страны\uD83D\uDE48" +
                             "\nЛибо отсутствуют заболевшие\uD83D\uDE0A" +
                             "\n\n\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
                             "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world.getTotalConfirmed()
