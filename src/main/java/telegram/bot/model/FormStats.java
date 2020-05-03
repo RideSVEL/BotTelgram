@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -86,6 +88,27 @@ public class FormStats {
         properties.load(inBuf);
         inBuf.close();
         return properties.getProperty(key, null);
+    }
+
+    public static List<String> getCountriesByRegex(String regex) {
+        List<String> lines = null;
+        try {
+            lines = Files.readAllLines(Paths.get("src\\main\\resources\\countryRu.txt"), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (lines != null) {
+            List<String> result = new ArrayList<>();
+            for (String string : lines) {
+                Pattern p = Pattern.compile("^" + regex.toLowerCase());
+                Matcher m = p.matcher(string.toLowerCase());
+                if (m.find()) {
+                    result.add(string);
+                }
+            }
+            return result;
+        }
+        return null;
     }
 
     public static List<String> getCountries(char symbol) {

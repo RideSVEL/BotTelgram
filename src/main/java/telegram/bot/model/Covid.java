@@ -2,7 +2,6 @@ package telegram.bot.model;
 
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -52,7 +51,7 @@ public class Covid extends TelegramLongPollingBot {
     private void sendCustomKeyboard(Long chatId, List<String> countries) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Выбери страну на клавиатуре ниже:");
+        message.setText("⌨ Выбери страну на клавиатуре ниже:");
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -77,13 +76,13 @@ public class Covid extends TelegramLongPollingBot {
     private void chatActionUpdate(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-            String text = update.getMessage().getText();
+//            String text = update.getMessage().getText();
 
             SendChatAction sendChatAction = new SendChatAction();
             sendChatAction.setChatId(update.getMessage().getChatId());
             sendChatAction.setAction(ActionType.TYPING);
             try {
-                Boolean wasSuccessfull = execute(sendChatAction);
+                execute(sendChatAction);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
@@ -151,7 +150,7 @@ public class Covid extends TelegramLongPollingBot {
                     System.out.println(message.getText());
                     System.out.println(message.getChatId());
                     System.out.println(message.getDate());
-                    sendMsg(message, "Секунду, сейчас произведу расчеты..");
+                    sendMsg(message, "⏳ Секунду, сейчас произведу расчеты..");
                     chatActionUpdate(update);
                     Country country = FormStats.getCountry(message.getText()
                             .replaceAll("[.,@$()012456789]", ""));
@@ -164,7 +163,14 @@ public class Covid extends TelegramLongPollingBot {
                                 + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
                                 + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
                                 + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive());
+
                     } else {
+                        List<String> countries = FormStats.getCountriesByRegex(message.getText().replaceAll("[.,@$()012456789]", ""));
+                        if (countries != null && countries.size() > 0) {
+                            sendMsg(message, "\uD83E\uDD37\u200D♂ К сожалению не знаю такой страны, но нашел похожие");
+                            sendCustomKeyboard(message.getChatId(), countries);
+                            return;
+                        }
                         World world1 = FormStats.getWorldTotal();
                         if (world1 != null) {
                             sendSticker(BotConfig.STICKER_COVID, message.getChatId());
