@@ -40,12 +40,12 @@ public class FormStats {
                     response = Unirest.get(BotConfig.API_WORLD).asString();
                     break;
                 case general:
-                    response = Unirest.get(BotConfig.API_FIRST_COVID + countryName + BotConfig.API_SECOND_COVID + generateDate(amount))
+                    response = Unirest.get(BotConfig.API_FIRST_COVID + countryName + BotConfig.API_SECOND_COVID + generateDate(amount-1) + BotConfig.API_THIRD_COVID + generateDate(amount))
                             .asString();
                     break;
             }
         } catch (UnirestException e) {
-            e.printStackTrace();
+            return null;
         }
         return response;
     }
@@ -62,7 +62,7 @@ public class FormStats {
         country.setTotalConfirmed(now.getInt("Confirmed"));
         country.setTotalDeath(now.getInt("Deaths"));
         country.setTotalRecovered(now.getInt("Recovered"));
-        country.setActive(now.getInt("Active"));
+        country.setActive(country.getTotalConfirmed() - country.getTotalDeath() - country.getTotalRecovered());
         country.setDate(now.getString("Date"));
         country.setNewConfirmed(country.getTotalConfirmed() - yesterday.getInt("Confirmed"));
         country.setNewRecovered(country.getTotalRecovered() - yesterday.getInt("Recovered"));
@@ -142,10 +142,13 @@ public class FormStats {
         country.setTotalConfirmed(now.getInt("Confirmed"));
         country.setTotalDeath(now.getInt("Deaths"));
         country.setTotalRecovered(now.getInt("Recovered"));
-        country.setActive(now.getInt("Active"));
+        country.setActive(country.getTotalConfirmed() - country.getTotalDeath() - country.getTotalRecovered());
         country.setDate(now.getString("Date"));
         country.setNewConfirmed(country.getTotalConfirmed() - yesterday.getInt("Confirmed"));
         country.setNewRecovered(country.getTotalRecovered() - yesterday.getInt("Recovered"));
+        if (country.getNewRecovered() < 0) {
+            country.setNewRecovered(country.getNewRecovered() * -1);
+        }
         country.setNewDeath(country.getTotalDeath() - yesterday.getInt("Deaths"));
         return country;
     }
@@ -167,7 +170,7 @@ public class FormStats {
             country.setTotalConfirmed(country.getTotalConfirmed() + jsonObject.getInt("Confirmed"));
             country.setTotalDeath(country.getTotalDeath() + jsonObject.getInt("Deaths"));
             country.setTotalRecovered(country.getTotalRecovered() + jsonObject.getInt("Recovered"));
-            country.setActive(country.getActive() + jsonObject.getInt("Active"));
+            country.setActive(country.getTotalConfirmed() - country.getTotalDeath() - country.getTotalRecovered());
         }
         country.setName(jsonArray.getJSONObject(0).getString("Country"));
         country.setDate(jsonArray.getJSONObject(0).getString("Date"));
@@ -177,9 +180,6 @@ public class FormStats {
         return country;
     }
 
-
-
-
     public static Country getCountry(String countryName) {
         String slug = null;
         try {
@@ -188,7 +188,7 @@ public class FormStats {
             e.printStackTrace();
         }
         if (slug != null) {
-            HttpResponse<String> response = getResponse(slug.toLowerCase(), -2, Cases.general);
+            HttpResponse<String> response = getResponse(slug.toLowerCase(), -1, Cases.general);
             if (response != null) {
                 if (response.getBody().equals("[]\n")) {
                     return null;
@@ -201,7 +201,7 @@ public class FormStats {
                         return parseByProvinces(response.getBody());
                 }
                 if (new JSONArray(response.getBody()).length() != 2) {
-                    HttpResponse<String> response2 = getResponse(slug.toLowerCase(), -3, Cases.general);
+                    HttpResponse<String> response2 = getResponse(slug.toLowerCase(), -2, Cases.general);
                     if (response2 != null) {
                         return parseCountry(response2.getBody());
                     }

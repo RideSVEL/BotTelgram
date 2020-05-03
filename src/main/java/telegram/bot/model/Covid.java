@@ -1,5 +1,11 @@
 package telegram.bot.model;
 
+import org.telegram.telegrambots.meta.api.methods.ActionType;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import telegram.bot.config.BotConfig;
 import org.telegram.telegrambots.ApiContextInitializer;
 
@@ -13,6 +19,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import telegram.bot.entity.Country;
 import telegram.bot.entity.World;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Covid extends TelegramLongPollingBot {
@@ -41,46 +49,135 @@ public class Covid extends TelegramLongPollingBot {
         }
     }
 
+    private void sendCustomKeyboard(Long chatId, List<String> countries) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText("Выбери страну на клавиатуре ниже:");
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        for (int i = 0; i < countries.size(); i++) {
+            if (i % 3 == 2) {
+                keyboard.add(row);
+                row = new KeyboardRow();
+            }
+            row.add(countries.get(i));
+        }
+        keyboard.add(row);
+        keyboardMarkup.setKeyboard(keyboard);
+        keyboardMarkup.setResizeKeyboard(true);
+        message.setReplyMarkup(keyboardMarkup);
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void chatActionUpdate(Update update) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
+
+            String text = update.getMessage().getText();
+
+            SendChatAction sendChatAction = new SendChatAction();
+            sendChatAction.setChatId(update.getMessage().getChatId());
+            sendChatAction.setAction(ActionType.TYPING);
+            try {
+                Boolean wasSuccessfull = execute(sendChatAction);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendSticker(String filePath, Long chatId) {
+        SendSticker sendSticker = new SendSticker();
+        sendSticker.setChatId(chatId);
+        sendSticker.setSticker(new File(filePath));
+        try {
+            execute(sendSticker);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @param update get updates messages from telegram server
      */
     @Override
     public void onUpdateReceived(Update update) {
+        chatActionUpdate(update);
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
-            if (message.getText().length() == 1) {
-                List<String> countries = FormStats.getCountries(message.getText().toUpperCase().charAt(0));
-                assert countries != null;
-                sendMsg(message, countries.toString());
-                return;
-            }
-            System.out.println(message.getText());
-            System.out.println(message.getChatId());
-            System.out.println(message.getDate());
-            sendMsg(message, "Секунду, сейчас произведу расчеты..");
-            Country country = FormStats.getCountry(message.getText()
-                    .replaceAll("[.,@$()012456789]", ""));
-            if (country != null) {
-                sendMsg(message, "\uD83C\uDF0D <b>Данные по стране:</b> " + "<em>" + country.getName() + "</em>"
-                        + "\n\n \uD83E\uDD22Заболевших за сутки: " + country.getNewConfirmed()
-                        + "\n\uD83C\uDD92 Выздоровевших за сутки: " + country.getNewRecovered()
-                        + "\n\uD83D\uDC80 Смертей за сутки: " + country.getNewDeath()
-                        + "\n\uD83E\uDD12 <b>Всего заболевших:</b> " + country.getTotalConfirmed()
-                        + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
-                        + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
-                        + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive());
-            } else {
-                World world = FormStats.getWorldTotal();
-                if (world != null) {
-                    sendMsg(message, "К сожалению, мой железный мозг не знает такой страны\uD83D\uDE48" +
-                            "\nЛибо отсутствуют заболевшие\uD83D\uDE0A" +
-                            "\n\n\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
-                            "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world.getTotalConfirmed()
-                            + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world.getTotalRecovered()
-                            + "\n⚰ <em>Общее число смертей:</em> " + world.getTotalDeath());
-                } else {
-                    sendMsg(message, "Произошла ошибка");
-                }
+            switch (message.getText()) {
+                case "/start":
+                    sendSticker(BotConfig.STICKER_HI, message.getChatId());
+                    sendMsg(message, "<b>Привет, " + message.getChat().getFirstName() + "!</b>✋");
+                    sendMsg(message, "\uD83E\uDDA0 С помощью этого бота у тебя есть возможность получить " +
+                            "статистику по заболеваемости, выздоровлению и др. данных." +
+                            "\nЧтобы узнать все возможности и способ управления ботом - отправь команду: /help " +
+                            "\n\n⛑ Здоровья тебе!");
+                    break;
+                case "/help":
+                    sendSticker(BotConfig.STICKER_HELP, message.getChatId());
+                    sendMsg(message, "Для того, чтобы получить статистику по нужной стране, воспользуйся одним из способов:" +
+                            "\n1️⃣ Введи первую букву искомой страны и выбери нужную из списка на клавиатуре" +
+                            "\n<em>Пример: \"у\", \"U\"</em>" +
+                            "\n2️⃣ Введи полное название страны" +
+                            "\n<em>Пример: \"Украина\", \"Ukraine\"</em>" +
+                            "\n3️⃣ Введи ISO-код нужной страны" +
+                            "\n<em>Пример: \"UA\"</em>" +
+                            "\n\uD83C\uDF0D Для получение статистики по всему миру воспользуйся командой: /world" +
+                            "\nПоддерживается ввод на языках: Русский, Английский." +
+                            "\n\uD83E\uDD1E <b>Удачи!</b>");
+                    break;
+                case "/world":
+                    World world = FormStats.getWorldTotal();
+                    if (world != null) {
+                        sendSticker(BotConfig.STICKER_COVID, message.getChatId());
+                        sendMsg(message, "\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
+                                "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world.getTotalConfirmed()
+                                + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world.getTotalRecovered()
+                                + "\n⚰ <em>Общее число смертей:</em> " + world.getTotalDeath());
+                    }
+                    break;
+                default:
+                    if (message.getText().length() == 1) {
+                        List<String> countries = FormStats.getCountries(message.getText().toUpperCase().charAt(0));
+                        assert countries != null;
+                        sendCustomKeyboard(message.getChatId(), countries);
+                        return;
+                    }
+                    System.out.println(message.getText());
+                    System.out.println(message.getChatId());
+                    System.out.println(message.getDate());
+                    sendMsg(message, "Секунду, сейчас произведу расчеты..");
+                    chatActionUpdate(update);
+                    Country country = FormStats.getCountry(message.getText()
+                            .replaceAll("[.,@$()012456789]", ""));
+                    if (country != null) {
+                        sendMsg(message, "\uD83C\uDF0D <b>Данные по стране:</b> " + "<em>" + country.getName() + "</em>"
+                                + "\n\n \uD83E\uDD22Заболевших за сутки: " + country.getNewConfirmed()
+                                + "\n\uD83C\uDD92 Выздоровевших за сутки: " + country.getNewRecovered()
+                                + "\n\uD83D\uDC80 Смертей за сутки: " + country.getNewDeath()
+                                + "\n\uD83E\uDD12 <b>Всего заболевших:</b> " + country.getTotalConfirmed()
+                                + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
+                                + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
+                                + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive());
+                    } else {
+                        World world1 = FormStats.getWorldTotal();
+                        if (world1 != null) {
+                            sendSticker(BotConfig.STICKER_COVID, message.getChatId());
+                            sendMsg(message, "К сожалению, мой железный мозг не знает такой страны\uD83D\uDE48" +
+                                    "\nЛибо отсутствуют заболевшие\uD83D\uDE0A" +
+                                    "\n\n\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
+                                    "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world1.getTotalConfirmed()
+                                    + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world1.getTotalRecovered()
+                                    + "\n⚰ <em>Общее число смертей:</em> " + world1.getTotalDeath());
+                        } else {
+                            sendMsg(message, "Произошла ошибка");
+                        }
+                    }
             }
         }
     }
