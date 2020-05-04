@@ -7,9 +7,9 @@ public class Country {
     private int totalConfirmed;
     private int newDeath;
     private int totalDeath;
-    private int newRecovered;
     private int totalRecovered;
-    private String date;
+    private int hardState;
+    private int rank;
     private int active;
 
     public int getActive() {
@@ -48,6 +48,21 @@ public class Country {
         return newDeath;
     }
 
+    @Override
+    public String toString() {
+        return "Country{" +
+                "name='" + name + '\'' +
+                ", newConfirmed=" + newConfirmed +
+                ", totalConfirmed=" + totalConfirmed +
+                ", newDeath=" + newDeath +
+                ", totalDeath=" + totalDeath +
+                ", totalRecovered=" + totalRecovered +
+                ", hardState=" + hardState +
+                ", rank=" + rank +
+                ", active=" + active +
+                '}';
+    }
+
     public void setNewDeath(int newDeath) {
         this.newDeath = newDeath;
     }
@@ -56,32 +71,26 @@ public class Country {
         return totalDeath;
     }
 
-    @Override
-    public String toString() {
-        return "Country{\n" +
-                "name='" + name + '\'' +
-                ", \nnewConfirmed=" + newConfirmed +
-                ", \ntotalConfirmed=" + totalConfirmed +
-                ", \nnewDeath=" + newDeath +
-                ", \ntotalDeath=" + totalDeath +
-                ", \nnewRecovered=" + newRecovered +
-                ", \ntotalRecovered=" + totalRecovered +
-                ", \ndate='" + date + '\'' +
-                ", \nactive=" + active +
-                '}';
+    public int getHardState() {
+        return hardState;
+    }
+
+    public void setHardState(int hardState) {
+        this.hardState = hardState;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
     public void setTotalDeath(int totalDeath) {
         this.totalDeath = totalDeath;
     }
 
-    public int getNewRecovered() {
-        return newRecovered;
-    }
-
-    public void setNewRecovered(int newRecovered) {
-        this.newRecovered = newRecovered;
-    }
 
     public int getTotalRecovered() {
         return totalRecovered;
@@ -91,11 +100,5 @@ public class Country {
         this.totalRecovered = totalRecovered;
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 }

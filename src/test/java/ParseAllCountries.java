@@ -30,7 +30,7 @@ public class ParseAllCountries {
 //        String[] results = result.split("\n");
         List<String> lines = null;
         try {
-             lines = Files.readAllLines(Paths.get("src\\main\\resources\\countryRu.txt"), StandardCharsets.UTF_8);
+             lines = Files.readAllLines(Paths.get(BotConfig.COUNTRIES_PATH_TO_TXT), StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,9 +45,7 @@ public class ParseAllCountries {
             System.out.println(jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
-//                System.out.println(jsonObject.getString("ISO2").toLowerCase());
-//                System.out.println(jsonObject.getString("Country"));
-//                System.out.println(results[i].toLowerCase().replaceAll(" ", "-") + " = " + jsonObject.getString("Slug"));
+                System.out.println(jsonObject.getString("Slug") + " = " + jsonObject.getString("ISO2"));
             }
 
         }

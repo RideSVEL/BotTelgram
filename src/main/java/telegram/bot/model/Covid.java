@@ -98,14 +98,15 @@ public class Covid extends TelegramLongPollingBot {
         sendSticker("src\\main\\resources\\img\\stickers\\" +
                         BotConfig.PATH_STICKERS_CORONA[new SecureRandom().nextInt(BotConfig.PATH_STICKERS_CORONA.length)],
                 message.getChatId());
-        sendMsg(message, "\uD83C\uDF0D <b>Данные по стране:</b> " + "<em>" + country.getName() + "</em>"
+        sendMsg(message, "\uD83C\uDF0D <b>Данные по стране:</b> " + "<em>" + country.getName() + "</em>" +
+                "\nℹ Страна №" + country.getRank() + " в мире по заболеваемости"
                 + "\n\n \uD83E\uDD22Заболевших за сутки: " + country.getNewConfirmed()
-                + "\n\uD83C\uDD92 Выздоровевших за сутки: " + country.getNewRecovered()
                 + "\n\uD83D\uDC80 Смертей за сутки: " + country.getNewDeath()
                 + "\n\uD83E\uDD12 <b>Всего заболевших:</b> " + country.getTotalConfirmed()
                 + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
                 + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
-                + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive());
+                + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive()
+                + "\n❎ <em>В тяжелом состоянии:</em> " + country.getHardState());
     }
 
     private void worldShow(Message message, World world) {
@@ -113,7 +114,11 @@ public class Covid extends TelegramLongPollingBot {
         sendMsg(message, "\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
                 "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world.getTotalConfirmed()
                 + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world.getTotalRecovered()
-                + "\n⚰ <em>Общее число смертей:</em> " + world.getTotalDeath());
+                + "\n⚰ <em>Общее число смертей:</em> " + world.getTotalDeath()
+                + "\n\uD83C\uDD95 <em>Заболевших за сутки</em> " + world.getNewConfirmed()
+                + "\n❌ <em>Смертей за сутки:</em> " + world.getNewDeath()
+                + "\n\uD83D\uDC51 <em>Болеют сейчас:</em> " + world.getActive()
+                + "\n\uD83C\uDF0C <em>Количество зараженных стран:</em> " + world.getNumberCountries());
     }
 
     private void commandStart(Message message) {
@@ -183,7 +188,7 @@ public class Covid extends TelegramLongPollingBot {
                     if (country != null) {
                         countryShow(message, country);
                     } else {
-                        List<String> countries = FormStats.getCountriesByRegex(message.getText().replaceAll("[.,@$()012456789]", ""));
+                        List<String> countries = FormStats.getCountriesByRegex(message.getText().toLowerCase().replaceAll("[.,@$()012456789]", ""));
                         if (countries != null && countries.size() > 0) {
                             sendMsg(message, "\uD83E\uDD37\u200D♂ К сожалению не знаю такой страны, но нашел похожие");
                             sendCustomKeyboard(message.getChatId(), countries);

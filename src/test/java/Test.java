@@ -57,17 +57,6 @@ public class Test {
         return simpleDateFormat.format(cal.getTime()) + "T00:00:00Z";
     }
 
-    private static HttpResponse<String> getResponse(String countryName, int amount) {
-        Unirest.setTimeouts(0, 0);
-        HttpResponse<String> response = null;
-        try {
-            response = Unirest.get(BotConfig.API_FIRST_COVID + countryName + BotConfig.API_SECOND_COVID + generateDate(amount))
-                    .asString();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
 
     public static Country parseCountry(String result) {
         Country country = new Country();
@@ -81,7 +70,7 @@ public class Test {
         country.setTotalDeath(temp.getInt("Deaths"));
         country.setTotalRecovered(temp.getInt("Recovered"));
         country.setActive(temp.getInt("Active"));
-        country.setDate(temp.getString("Date"));
+        //country.setDate(temp.getString("Date"));
         return country;
     }
 }
