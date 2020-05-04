@@ -91,12 +91,24 @@
             <version>1.4.9</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.languagetool/languagetool-core -->
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>languagetool-core</artifactId>
+            <version>4.9</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-en</artifactId>
+            <version>4.9</version>
+        </dependency>
 
-
-
-
-
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-ru</artifactId>
+            <version>4.9</version>
+        </dependency>
 
     </dependencies>
 
