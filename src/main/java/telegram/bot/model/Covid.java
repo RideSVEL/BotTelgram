@@ -19,6 +19,8 @@ import telegram.bot.entity.Country;
 import telegram.bot.entity.World;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +34,8 @@ public class Covid extends TelegramLongPollingBot {
      */
     private synchronized void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
-
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId());
-//        if (reply) {
-//            sendMessage.setReplyToMessageId(message.getMessageId());
-//        }
-
         sendMessage.setText(text).setParseMode("html");
         System.out.println(message.getText());
         try {
@@ -75,9 +72,6 @@ public class Covid extends TelegramLongPollingBot {
 
     private void chatActionUpdate(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-
-//            String text = update.getMessage().getText();
-
             SendChatAction sendChatAction = new SendChatAction();
             sendChatAction.setChatId(update.getMessage().getChatId());
             sendChatAction.setAction(ActionType.TYPING);
@@ -100,6 +94,51 @@ public class Covid extends TelegramLongPollingBot {
         }
     }
 
+    private void countryShow(Message message, Country country) {
+        sendSticker("src\\main\\resources\\img\\stickers\\" +
+                        BotConfig.PATH_STICKERS_CORONA[new SecureRandom().nextInt(BotConfig.PATH_STICKERS_CORONA.length)],
+                message.getChatId());
+        sendMsg(message, "\uD83C\uDF0D <b>Данные по стране:</b> " + "<em>" + country.getName() + "</em>"
+                + "\n\n \uD83E\uDD22Заболевших за сутки: " + country.getNewConfirmed()
+                + "\n\uD83C\uDD92 Выздоровевших за сутки: " + country.getNewRecovered()
+                + "\n\uD83D\uDC80 Смертей за сутки: " + country.getNewDeath()
+                + "\n\uD83E\uDD12 <b>Всего заболевших:</b> " + country.getTotalConfirmed()
+                + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
+                + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
+                + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive());
+    }
+
+    private void worldShow(Message message, World world) {
+        sendSticker(BotConfig.STICKER_COVID, message.getChatId());
+        sendMsg(message, "\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
+                "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world.getTotalConfirmed()
+                + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world.getTotalRecovered()
+                + "\n⚰ <em>Общее число смертей:</em> " + world.getTotalDeath());
+    }
+
+    private void commandStart(Message message) {
+        sendSticker(BotConfig.STICKER_HI, message.getChatId());
+        sendMsg(message, "<b>Привет, " + message.getChat().getFirstName() + "!</b>✋");
+        sendMsg(message, "\uD83E\uDDA0 С помощью этого бота у тебя есть возможность получить " +
+                "статистику по заболеваемости, выздоровлению и др. данных." +
+                "\nЧтобы узнать все возможности и способ управления ботом - отправь команду: /help " +
+                "\n\n⛑ Здоровья тебе!");
+    }
+
+    private void commandHelp(Message message) {
+        sendSticker(BotConfig.STICKER_HELP, message.getChatId());
+        sendMsg(message, "Для того, чтобы получить статистику по нужной стране, воспользуйся одним из способов:" +
+                "\n1️⃣ Введи первую букву необходимой страны и выбери нужную из списка на клавиатуре" +
+                "\n<em>Пример: \"у\", \"U\"</em>" +
+                "\n2️⃣ Введи полное название страны" +
+                "\n<em>Пример: \"Украина\", \"Ukraine\"</em>" +
+                "\n3️⃣ Введи ISO-код нужной страны" +
+                "\n<em>Пример: \"UA\"</em>" +
+                "\n\uD83C\uDF0D Для получение статистики по всему миру воспользуйся командой: /world" +
+                "\nПоддерживается ввод на языках: Русский, Английский." +
+                "\n\uD83E\uDD1E <b>Удачи!</b>");
+    }
+
     /**
      * @param update get updates messages from telegram server
      */
@@ -110,40 +149,27 @@ public class Covid extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case "/start":
-                    sendSticker(BotConfig.STICKER_HI, message.getChatId());
-                    sendMsg(message, "<b>Привет, " + message.getChat().getFirstName() + "!</b>✋");
-                    sendMsg(message, "\uD83E\uDDA0 С помощью этого бота у тебя есть возможность получить " +
-                            "статистику по заболеваемости, выздоровлению и др. данных." +
-                            "\nЧтобы узнать все возможности и способ управления ботом - отправь команду: /help " +
-                            "\n\n⛑ Здоровья тебе!");
+                    commandStart(message);
                     break;
                 case "/help":
-                    sendSticker(BotConfig.STICKER_HELP, message.getChatId());
-                    sendMsg(message, "Для того, чтобы получить статистику по нужной стране, воспользуйся одним из способов:" +
-                            "\n1️⃣ Введи первую букву искомой страны и выбери нужную из списка на клавиатуре" +
-                            "\n<em>Пример: \"у\", \"U\"</em>" +
-                            "\n2️⃣ Введи полное название страны" +
-                            "\n<em>Пример: \"Украина\", \"Ukraine\"</em>" +
-                            "\n3️⃣ Введи ISO-код нужной страны" +
-                            "\n<em>Пример: \"UA\"</em>" +
-                            "\n\uD83C\uDF0D Для получение статистики по всему миру воспользуйся командой: /world" +
-                            "\nПоддерживается ввод на языках: Русский, Английский." +
-                            "\n\uD83E\uDD1E <b>Удачи!</b>");
+                    commandHelp(message);
                     break;
                 case "/world":
                     World world = FormStats.getWorldTotal();
                     if (world != null) {
-                        sendSticker(BotConfig.STICKER_COVID, message.getChatId());
-                        sendMsg(message, "\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
-                                "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world.getTotalConfirmed()
-                                + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world.getTotalRecovered()
-                                + "\n⚰ <em>Общее число смертей:</em> " + world.getTotalDeath());
+                        worldShow(message, world);
                     }
                     break;
                 default:
                     if (message.getText().length() == 1) {
                         List<String> countries = FormStats.getCountries(message.getText().toUpperCase().charAt(0));
                         assert countries != null;
+                        if (countries.size() == 0) {
+                            sendMsg(message, "К сожалению, я не нашел стран начинающихся" +
+                                    " на данную букву, попробуй еще \uD83D\uDE09\uD83D\uDE0A");
+                            return;
+                        }
+                        sendSticker("src\\main\\resources\\img\\keyboard.tgs", message.getChatId());
                         sendCustomKeyboard(message.getChatId(), countries);
                         return;
                     }
@@ -155,15 +181,7 @@ public class Covid extends TelegramLongPollingBot {
                     Country country = FormStats.getCountry(message.getText()
                             .replaceAll("[.,@$()012456789]", ""));
                     if (country != null) {
-                        sendMsg(message, "\uD83C\uDF0D <b>Данные по стране:</b> " + "<em>" + country.getName() + "</em>"
-                                + "\n\n \uD83E\uDD22Заболевших за сутки: " + country.getNewConfirmed()
-                                + "\n\uD83C\uDD92 Выздоровевших за сутки: " + country.getNewRecovered()
-                                + "\n\uD83D\uDC80 Смертей за сутки: " + country.getNewDeath()
-                                + "\n\uD83E\uDD12 <b>Всего заболевших:</b> " + country.getTotalConfirmed()
-                                + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
-                                + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
-                                + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive());
-
+                        countryShow(message, country);
                     } else {
                         List<String> countries = FormStats.getCountriesByRegex(message.getText().replaceAll("[.,@$()012456789]", ""));
                         if (countries != null && countries.size() > 0) {
@@ -171,15 +189,20 @@ public class Covid extends TelegramLongPollingBot {
                             sendCustomKeyboard(message.getChatId(), countries);
                             return;
                         }
-                        World world1 = FormStats.getWorldTotal();
-                        if (world1 != null) {
-                            sendSticker(BotConfig.STICKER_COVID, message.getChatId());
+                        try {
+                            country = FormStats.spellChecking(message.getText().replaceAll("[.,@$()012456789]", ""));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (country != null) {
+                            countryShow(message, country);
+                            return;
+                        }
+                        world = FormStats.getWorldTotal();
+                        if (world != null) {
                             sendMsg(message, "К сожалению, мой железный мозг не знает такой страны\uD83D\uDE48" +
-                                    "\nЛибо отсутствуют заболевшие\uD83D\uDE0A" +
-                                    "\n\n\uD83D\uDDFA <b>Держи данные по всему миру:</b>" +
-                                    "\n\n\uD83E\uDD12 <em>Общее число заболевших:</em> " + world1.getTotalConfirmed()
-                                    + "\n\uD83C\uDFE5 <em>Общее число выздоровевших:</em> " + world1.getTotalRecovered()
-                                    + "\n⚰ <em>Общее число смертей:</em> " + world1.getTotalDeath());
+                                    "\nЛибо отсутствуют заболевшие\uD83D\uDE0A");
+                            worldShow(message, world);
                         } else {
                             sendMsg(message, "Произошла ошибка");
                         }

@@ -18,5 +18,8 @@ public class BotConfig {
     public static final String STICKER_COVID = "src\\main\\resources\\img\\AnimatedStickerKorona.tgs";
     public static final String STICKER_HELP = "src\\main\\resources\\img\\AnimatedStickerHelp.tgs";
 
+    public static final String[] PATH_STICKERS_CORONA = {"0.tgs","1.tgs","2.tgs","3.tgs","4.tgs","5.tgs","6.tgs","7.tgs","8.tgs","9.tgs","10.tgs",
+            "13.tgs","14.tgs","15.tgs","16.tgs","17.tgs","18.tgs","19.tgs","20.tgs","21.tgs","22.tgs"};
+
 
 }

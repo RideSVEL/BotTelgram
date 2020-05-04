@@ -20,6 +20,12 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.languagetool.JLanguageTool;
+import org.languagetool.language.AmericanEnglish;
+import org.languagetool.language.BritishEnglish;
+import org.languagetool.language.English;
+import org.languagetool.language.Russian;
+import org.languagetool.rules.RuleMatch;
 import telegram.bot.config.BotConfig;
 import telegram.bot.entity.Country;
 import telegram.bot.entity.World;
@@ -42,7 +48,7 @@ public class FormStats {
                     response = Unirest.get(BotConfig.API_WORLD).asString();
                     break;
                 case general:
-                    response = Unirest.get(BotConfig.API_FIRST_COVID + countryName + BotConfig.API_SECOND_COVID + generateDate(amount-1) + BotConfig.API_THIRD_COVID + generateDate(amount))
+                    response = Unirest.get(BotConfig.API_FIRST_COVID + countryName + BotConfig.API_SECOND_COVID + generateDate(amount - 1) + BotConfig.API_THIRD_COVID + generateDate(amount))
                             .asString();
                     break;
             }
@@ -90,6 +96,32 @@ public class FormStats {
         return properties.getProperty(key, null);
     }
 
+    public static Country spellChecking(String word) throws IOException {
+        Pattern pattern = Pattern.compile("[а-яА-ЯёЁ\\s\\p{Punct}]+");
+        Matcher matcher = pattern.matcher(word.toLowerCase());
+        System.out.println(matcher.matches());
+        JLanguageTool lt;
+        if (matcher.matches()) {
+            lt = new JLanguageTool(new Russian());
+        } else {
+            lt = new JLanguageTool(new AmericanEnglish());
+        }
+        List<RuleMatch> matches = lt.check(word.toLowerCase());
+        List<String> list = null;
+        for (RuleMatch match : matches) {
+            list = match.getSuggestedReplacements();
+        }
+        if (list != null && list.size() != 0) {
+            for (String check : list) {
+                String key = countriesProperties(check.toLowerCase().replaceAll(" ", "-"));
+                if (key != null) {
+                    return getCountry(key);
+                }
+            }
+        }
+        return null;
+    }
+
     public static List<String> getCountriesByRegex(String regex) {
         List<String> lines = null;
         try {
@@ -100,6 +132,9 @@ public class FormStats {
         if (lines != null) {
             List<String> result = new ArrayList<>();
             for (String string : lines) {
+                if (string.length() == regex.length()) {
+                    break;
+                }
                 Pattern p = Pattern.compile("^" + regex.toLowerCase());
                 Matcher m = p.matcher(string.toLowerCase());
                 if (m.find()) {
@@ -141,7 +176,7 @@ public class FormStats {
         return null;
     }
 
-    private static Country parseFrance(String body) {
+    private static Country parseByEmptyProvince(String body) {
         JSONArray jsonArray = new JSONArray(body);
         JSONObject now = null;
         JSONObject yesterday = null;
@@ -217,10 +252,13 @@ public class FormStats {
                     return null;
                 }
                 switch (slug) {
+                    case "united-kingdom":
                     case "france":
-                        return parseFrance(response.getBody());
+                    case "denmark":
+                        return parseByEmptyProvince(response.getBody());
                     case "china":
                     case "united-states":
+
                         return parseByProvinces(response.getBody());
                 }
                 if (new JSONArray(response.getBody()).length() != 2) {
