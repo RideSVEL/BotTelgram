@@ -105,7 +105,7 @@ public class Covid extends TelegramLongPollingBot {
                 + "\n\uD83E\uDD12 <b>Всего заболевших:</b> " + country.getTotalConfirmed()
                 + "\n\uD83C\uDFE5 <b>Всего выздоровевших:</b> " + country.getTotalRecovered()
                 + "\n⚰ <b>Всего смертей:</b> " + country.getTotalDeath()
-                + "\n\uD83D\uDD1B <em>Болеющие на данный момент:</em> " + country.getActive()
+                + "\n\uD83D\uDE37 <em>Болеющие на данный момент:</em> " + country.getActive()
                 + "\n❎ <em>В тяжелом состоянии:</em> " + country.getHardState());
     }
 
